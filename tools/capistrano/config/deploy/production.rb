@@ -4,3 +4,5 @@ set :keep_releases, 5
 
 server "user@domain", :app, :primary => true
 # set :gateway, "user@host" # Use if you need to bounce through another server
+
+set :is_production_deploy, true

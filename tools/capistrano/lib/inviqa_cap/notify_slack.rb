@@ -16,7 +16,7 @@ module InviqaCap
         set :slack_hook_url, 'https://hooks.slack.com/services/.../.../...'
 
         # Notify the development team about this release?
-        set :notify_development, true
+        set :notify_development, false
 
         after 'deploy', 'inviqa:notifications:notify_slack'
 
