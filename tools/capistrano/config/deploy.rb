@@ -3,6 +3,7 @@ set :default_stage, "dev"
 
 require 'capistrano/ext/multistage'
 require 'inviqa_cap/composer'
+require 'inviqa_cap/interactive'
 
 set :repository, "{{git_url}}"
 set :scm, :git
