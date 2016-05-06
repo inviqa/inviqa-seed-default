@@ -129,10 +129,7 @@ module InviqaCap
                 require 'json'
                 json_text = json_payload.to_json
 
-                require 'shellwords'
-                escaped_json_text = Shellwords.escape(json_text)
-
-                run_locally "curl -X POST --data 'payload=#{escaped_json_text}' #{slack_hook_url}"
+                run_locally "curl -X POST --data 'payload=#{json_text}' #{slack_hook_url}"
               else
                 puts 'Skipping Slack Notification'
               end

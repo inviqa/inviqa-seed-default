@@ -47,9 +47,7 @@ Please add a short comment. For example, how long do you need the environment fo
               require 'json'
               json_text = deployment_details.to_json
 
-              require 'shellwords'
-              escaped_json_text = Shellwords.escape(json_text)
-              run "echo '#{escaped_json_text}' > #{latest_release}/branch.json"
+              run "echo '#{json_text}' > #{latest_release}/branch.json"
             end
 
             # Confirm that the user actually wanted to run tasks on or deploy to production.
