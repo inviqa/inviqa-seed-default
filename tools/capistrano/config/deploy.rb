@@ -4,6 +4,7 @@ set :default_stage, "dev"
 require 'capistrano/ext/multistage'
 require 'inviqa_cap/composer'
 require 'inviqa_cap/interactive'
+require 'inviqa_cap/notify_slack'
 
 set :repository, "{{git_url}}"
 set :scm, :git
