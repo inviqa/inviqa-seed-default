@@ -5,6 +5,7 @@ require 'capistrano/ext/multistage'
 require 'inviqa_cap/composer'
 require 'inviqa_cap/interactive'
 require 'inviqa_cap/notify_slack'
+require 'inviqa_cap/notify_newrelic'
 
 set :repository, "{{git_url}}"
 set :scm, :git
