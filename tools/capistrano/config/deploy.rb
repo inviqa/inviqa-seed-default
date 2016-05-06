@@ -23,9 +23,7 @@ set :slack_channel, '#{{name}}'
 set :github_url, 'https://github.com/{{git_url}}'.gsub!('git@github.com:', '')
 set :jira_url, 'https://jira.example.com/'
 set :jira_project, '\\(PROJECT1|PROJECT2|PROJECT3\\)' # regular expression!
-
 set :slack_hook_url, 'https://hooks.slack.com/services/.../.../...'
-
 # Notify the development team about this release?
 set :notify_development, false
 # End Slack notifications
