@@ -20,7 +20,14 @@
     },
     "packages": [
       "mod_realdoc"
-    ]
+    ],
+    "package_replacements": {
+      "php": {
+        "notify": {
+          "service[apache2]": "restart"
+        }
+      }
+    }
   },
   "run_list": [
     "recipe[yum-webtatic]",

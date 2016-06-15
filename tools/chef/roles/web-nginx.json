@@ -32,6 +32,13 @@
     "services": {
       "nginx": ["enable", "start"],
       "php-fpm": ["enable", "start"]
+    },
+    "package_replacements": {
+      "php": {
+        "notify": {
+          "service[php-fpm]": "restart"
+        }
+      }
     }
   },
   "run_list": [
