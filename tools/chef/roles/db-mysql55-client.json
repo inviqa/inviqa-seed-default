@@ -3,6 +3,11 @@
   "chef_type": "role",
   "json_class": "Chef::Role",
   "description": "MySQL 5.5 database client",
+  "default_attributes": {
+    "mysql-client": {
+      "replace_package_target": "mysql55"
+    }
+  },
   "override_attributes": {
     "mysql": {
       "client": {
@@ -15,6 +20,7 @@
   },
   "run_list": [
     "yum-ius",
+    "role[db-mysql-upgrade]",
     "recipe[mysql::client]"
   ]
 }

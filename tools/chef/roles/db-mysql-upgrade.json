@@ -1,0 +1,59 @@
+{
+  "name": "db-mysql-upgrade",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "description": "MySQL upgrader. Be careful!",
+  "default_attributes": {
+    "mysql-libs": {
+      "replace_packages": [
+        "mysql-libs",
+        "mysql55w-libs",
+        "mariadb-libs",
+        "Percona-Server-shared-51",
+        "Percona-Server-shared-55"
+      ]
+    },
+    "mysql-client": {
+      "replace_packages": [
+        "mysql",
+        "mariadb",
+        "Percona-Server-client-51",
+        "Percona-Server-client-55"
+      ]
+    },
+    "mysql": {
+      "replace_packages": [
+        "mysql-server",
+        "mariadb-server",
+        "Percona-Server-server-51",
+        "Percona-Server-server-55"
+      ]
+    },
+    "package_replacements": {
+      "mysql-libs": {
+        "enabled": true,
+        "strategy": "yum_shell",
+        "from": "replace_packages",
+        "to": "replace_package_targets"
+      },
+      "mysql-client": {
+        "enabled": true,
+        "strategy": "yum_replace",
+        "from": "replace_packages",
+        "to": "replace_package_target"
+      },
+      "mysql": {
+        "enabled": true,
+        "strategy": "yum_replace",
+        "from": "replace_packages",
+        "to": "replace_package_target",
+        "notify": {
+          "service[mysql]": "restart"
+        }
+      }
+    }
+  },
+  "run_list": [
+    "recipe[package-replace]"
+  ]
+}
