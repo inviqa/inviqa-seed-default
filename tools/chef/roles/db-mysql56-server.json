@@ -4,6 +4,40 @@
   "json_class": "Chef::Role",
   "description": "MySQL 5.6 database server",
   "default_attributes": {
+    "mysql-libs": {
+      "replace_packages": [
+        "mysql-libs",
+        "mysql55-libs",
+        "mysql55w-libs",
+        "mariadb-libs",
+        "libmysqlclient16"
+      ],
+      "replace_package_targets": [
+        "Percona-Server-shared-56"
+      ]
+    },
+    "mysql": {
+      "replace_packages": [
+        "mysql-server",
+        "mysql55-server",
+        "mariadb-server"
+      ],
+      "replace_package_target": "Percona-Server-server-56"
+    },
+    "package_replacements": {
+      "mysql-libs": {
+        "enabled": true,
+        "strategy": "yum_shell",
+        "from": "replace_packages",
+        "to": "replace_package_target"
+      },
+      "mysql": {
+        "enabled": true,
+        "strategy": "yum_replace",
+        "from": "replace_packages",
+        "to": "replace_package_target"
+      }
+    },
     "services": {
       "mysql": ["enable", "start"]
     }
@@ -25,6 +59,7 @@
   },
   "run_list": [
     "recipe[yum-percona]",
+    "recipe[package-replace]",
     "recipe[mysql::server]",
     "recipe[config-driven-helper::services]",
     "recipe[config-driven-helper::mysql-databases]",
