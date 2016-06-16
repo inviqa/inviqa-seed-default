@@ -35,7 +35,10 @@
         "enabled": true,
         "strategy": "yum_shell",
         "from": "replace_packages",
-        "to": "replace_package_targets"
+        "to": "replace_package_targets",
+        "notify": {
+          "gem_package[mysql]": "remove"
+        }
       },
       "mysql-client": {
         "enabled": true,
