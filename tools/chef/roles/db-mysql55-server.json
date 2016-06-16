@@ -7,11 +7,18 @@
     "mysql-libs": {
       "replace_package_targets": [
         "mysql55-libs",
-        "libmysqlclient16"
+        "mysqlclient16"
       ]
     },
     "mysql": {
       "replace_package_target": "mysql55-server"
+    },
+    "package_replacements": {
+      "mysql-libs": {
+        "notify": {
+          "service[mysql]": "restart"
+        }
+      }
     },
     "services": {
       "mysql": ["enable", "start"]

@@ -4,6 +4,19 @@
   "json_class": "Chef::Role",
   "description": "MySQL 5.6 database client",
   "default_attributes": {
+    "mysql-libs": {
+      "replace_packages": [
+        "mysql55-libs",
+        "mysqlclient16"
+      ],
+      "replace_package_targets": [
+        "Percona-Server-shared-56",
+        "cronie",
+        "cronie-anacron",
+        "crontabs",
+        "postfix"
+      ]
+    },
     "mysql-client": {
       "replace_package_target": "Percona-Server-client-56"
     }

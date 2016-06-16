@@ -8,6 +8,7 @@
       "replace_packages": [
         "mysql-libs",
         "mysql55w-libs",
+        "libmysqlclient16",
         "mariadb-libs",
         "Percona-Server-shared-51",
         "Percona-Server-shared-55"
