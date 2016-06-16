@@ -6,7 +6,7 @@
   "default_attributes": {
     "mysql-libs": {
       "replace_package_targets": [
-        "mysql55-libs"
+        "mysql55-libs",
         "libmysqlclient16"
       ]
     },

@@ -7,10 +7,15 @@
     "mysql-libs": {
       "replace_packages": [
         "mysql55-libs",
+        "mysqlclient16",
         "libmysqlclient16"
       ],
       "replace_package_targets": [
-        "Percona-Server-shared-56"
+        "Percona-Server-shared-56",
+        "cronie",
+        "cronie-anacron",
+        "crontabs",
+        "postfix"
       ]
     },
     "mysql": {
