@@ -7,6 +7,7 @@
     "mysql-libs": {
       "replace_package_targets": [
         "mysql55-libs",
+        "Percona-Server-shared-51",
         "mysqlclient16"
       ]
     },
