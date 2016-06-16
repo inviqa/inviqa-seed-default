@@ -11,11 +11,8 @@
         "libmysqlclient16"
       ],
       "replace_package_targets": [
-        "Percona-Server-shared-56",
-        "cronie",
-        "cronie-anacron",
-        "crontabs",
-        "postfix"
+        "Percona-Server-shared-51",
+        "Percona-Server-shared-56"
       ]
     },
     "mysql": {
