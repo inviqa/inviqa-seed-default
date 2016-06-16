@@ -24,13 +24,6 @@
       ],
       "replace_package_target": "Percona-Server-server-56"
     },
-    "package_replacements": {
-      "mysql-libs": {
-        "notify": {
-          "service[mysql]": "restart"
-        }
-      }
-    },
     "services": {
       "mysql": ["enable", "start"]
     }

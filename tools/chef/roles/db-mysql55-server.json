@@ -13,13 +13,6 @@
     "mysql": {
       "replace_package_target": "mysql55-server"
     },
-    "package_replacements": {
-      "mysql-libs": {
-        "notify": {
-          "service[mysql]": "restart"
-        }
-      }
-    },
     "services": {
       "mysql": ["enable", "start"]
     }
