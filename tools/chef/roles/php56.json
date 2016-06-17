@@ -6,22 +6,9 @@
   "default_attributes": {
     "php": {
       "replace_packages": [
-        "php-common",
-        "php54-common",
-        "php54w-common",
-        "php54u-common",
-        "php55-common",
-        "php55w-common",
-        "php55u-common"
+        "php55w-common"
       ],
       "replace_package_target": "php56w-common"
-    },
-    "package_replacements": {
-      "php": {
-        "enabled": true,
-        "from": "replace_packages",
-        "to": "replace_package_target"
-      }
     }
   },
   "override_attributes": {
@@ -51,8 +38,7 @@
     }
   },
   "run_list": [
-    "yum-webtatic",
-    "package-replace",
-    "php"
+    "role[php-upgrade]",
+    "recipe[php]"
   ]
 }
