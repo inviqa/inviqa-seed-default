@@ -35,8 +35,7 @@
         "packages": [
           "Percona-Server-devel-56",
           "Percona-Server-server-56"
-        ],
-        "service_name": "mysql"
+        ]
       }
     }
   },
