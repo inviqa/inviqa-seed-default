@@ -1,0 +1,46 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+  chef_omnibus_install_options: -d /tmp/vagrant-cache/vagrant_omnibus
+  databags_path: databags/
+  environments_path: environments/
+  solo_rb:
+    environment: development
+
+platforms:
+  - name: inviqa/centos-6-minimal
+  - name: inviqa/centos-7-minimal
+
+suites:
+<% Dir['roles/**.json'].each do |file| %>
+  - name: <%= file.sub('.json', '').sub('/', '-') %>
+    run_list:
+      - role[<%= file.sub('roles/', '').sub('.json', '') %>]
+<% end %>
+
+<% require 'json' %>
+<% Dir['nodes/**.json'].each do |file| %>
+  <% parsed = JSON.parse(File.read(file)) %>
+  - name: <%= file.sub('.json', '').sub('/', '-') %>
+    provisioner:
+      solo_rb:
+        environment: <%= parsed['environment'] %>
+    run_list:
+      <%= parsed['run_list'] %>
+    attributes:
+      <% 
+        parsed['normal'] ||= {}
+        parsed['normal']['mysql'] ||= {}
+        parsed['normal']['mysql']['server_debian_password'] = 'root'
+        parsed['normal']['mysql']['server_root_password'] = 'root'
+        parsed['normal']['mysql']['server_repl_password'] = 'root'
+        parsed['normal']['mysql']['connections'] ||= {}
+        parsed['normal']['mysql']['connections']['db1'] ||= {}
+        parsed['normal']['mysql']['connections']['db1']['host'] = 'localhost'
+        parsed['normal']['mysql']['connections']['db1']['password'] = 'root'
+      %>
+      <%= parsed['normal'] ? parsed['normal'].to_json : '' %>
+<% end %>
