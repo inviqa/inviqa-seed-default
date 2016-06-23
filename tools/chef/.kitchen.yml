@@ -1,6 +1,8 @@
 ---
 driver:
   name: vagrant
+  vagrantfiles:
+    - ./test/Vagrantfile.cachier.rb
 
 provisioner:
   name: chef_solo
