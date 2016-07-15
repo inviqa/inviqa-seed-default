@@ -1,8 +1,8 @@
 {
-  "name": "varnish",
+  "name": "varnish-local",
   "chef_type": "role",
   "json_class": "Chef::Role",
-  "description": "Varnish HTTP cache",
+  "description": "Varnish HTTP cache role for when hosted on the same server as backend",
   "override_attributes": {
     "magento": {
       "apache": {
