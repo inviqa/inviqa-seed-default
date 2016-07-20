@@ -4,11 +4,6 @@
   "json_class": "Chef::Role",
   "description": "Varnish HTTP cache role for when hosted on the same server as backend",
   "override_attributes": {
-    "magento": {
-      "apache": {
-        "unsecure_port": "8080"
-      }
-    },
     "varnish": {
       "backend_port": "8080",
       "listen_port": "80"
