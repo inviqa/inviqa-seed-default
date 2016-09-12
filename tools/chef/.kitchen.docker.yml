@@ -2,6 +2,9 @@
 driver:
   name: docker
 
+provisioner:
+  chef_omnibus_root: /opt/chef
+
 driver_config:
   require_chef_omnibus: false
   use_sudo: false
@@ -15,7 +18,7 @@ platforms:
     driver_config:
       provision_command:
         - yum makecache && yum -y install autoconf bison flex gcc gcc-c++ kernel-devel make m4 curl tar
-        - curl -L https://www.opscode.com/chef/install.sh | bash -s -- -v 12.8.1 -d /tmp/vagrant-cache/vagrant_omnibus/
+        - curl -L https://www.opscode.com/chef/install.sh | bash -s -- -v 12.14.61 -d /tmp/vagrant-cache/vagrant_omnibus/
         - env GEM_HOME=/tmp/verifier/gems GEM_PATH=/tmp/verifier/gems GEM_CACHE=/tmp/verifier/gems/cache /opt/chef/embedded/bin/gem install --no-ri --no-rdoc net-ssh -v '2.9.2'
         - env GEM_HOME=/tmp/verifier/gems GEM_PATH=/tmp/verifier/gems GEM_CACHE=/tmp/verifier/gems/cache /opt/chef/embedded/bin/gem install --no-ri --no-rdoc thor busser busser-serverspec serverspec rspec-expectations
         - chown -R kitchen:kitchen /tmp/verifier
