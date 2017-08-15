@@ -101,6 +101,33 @@ tasks:
               type: tcp
               port: 3306
 
+        mailcatcherproxy:
+          endpoints:
+            - name: mailcatcherproxy
+              cloud_flare_zone: &CLOUD_FLARE_SETTINGS
+                zone_identifier: ${CLOUD_FLARE_ZONE}
+                authentication:
+                    email: ${CLOUD_FLARE_EMAIL}
+                    api_key: ${CLOUD_FLARE_API_KEY}
+                proxied: true
+                record_suffix: '-mc-<%= config.name %>.webpipeline.net'
+              ingress:
+                class: nginx
+                host_suffix: '-mc-<%= config.name %>.webpipeline.net'
+          specification:
+            source:
+              image: quay.io/continuouspipe/nginx-reverse-proxy:stable
+            environment_variables:
+              PROXY_LOCATIONS: '[{"location": "/", "backend": "http://mailcatcher:1080", "preserve_host": true}]'
+              AUTH_HTTP_ENABLED: "true"
+              AUTH_HTTP_HTPASSWD: ${AUTH_HTTP_HTPASSWD}
+              AUTH_IP_WHITELIST_ENABLED: "true"
+              AUTH_IP_WHITELIST: ${AUTH_IP_WHITELIST}
+              TRUSTED_REVERSE_PROXIES: ${TRUSTED_REVERSE_PROXIES}
+            ports:
+              - 80
+              - 443
+
         mailcatcher:
           specification:
             accessibility:
@@ -151,11 +178,7 @@ tasks:
           endpoints:
             - name: web
               cloud_flare_zone:
-                zone_identifier: ${CLOUD_FLARE_ZONE}
-                authentication:
-                    email: ${CLOUD_FLARE_EMAIL}
-                    api_key: ${CLOUD_FLARE_API_KEY}
-                proxied: true
+                <<: *CLOUD_FLARE_SETTINGS
                 record_suffix: ${CP_ENVIRONMENT_DOMAIN_SUFFIX}
               ingress:
                 class: nginx
