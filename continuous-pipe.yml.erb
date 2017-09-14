@@ -6,9 +6,7 @@ variables:
     name: CP_ENVIRONMENT
     expression: '"<%= config.name %>-" ~ code_reference.branch'
   CP_ENVIRONMENT_DOMAIN_SUFFIX: -<%= config.name %>.webpipeline.net
-  SENDMAIL_RELAY_HOST:
-    name: SENDMAIL_RELAY_HOST
-    expression: '"mailcatcher.<%= config.name %>-" ~ slugify(code_reference.branch) ~ ".svc.cluster.local"'
+  SENDMAIL_RELAY_HOST: mailcatcher.${__TASK_APPLICATION_TARGET_ENVIRONMENT_NAME}.svc.cluster.local
   ASSETS_S3_BUCKET: '<%= config.asset_bucket %>'
   ASSETS_ENV: ''
   DEVELOPMENT_MODE: 'false'
