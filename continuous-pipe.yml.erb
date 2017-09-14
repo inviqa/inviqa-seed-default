@@ -104,8 +104,8 @@ tasks:
               cloud_flare_zone: &CLOUD_FLARE_SETTINGS
                 zone_identifier: ${CLOUD_FLARE_ZONE?:}
                 authentication:
-                    email: ${CLOUD_FLARE_EMAIL?:}
-                    api_key: ${CLOUD_FLARE_API_KEY?:}
+                  email: ${CLOUD_FLARE_EMAIL?:}
+                  api_key: ${CLOUD_FLARE_API_KEY?:}
                 proxied: true
                 record_suffix: '-mc-<%= config.name %>.webpipeline.net'
               ingress:
