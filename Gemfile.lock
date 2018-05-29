@@ -188,7 +188,7 @@ GEM
     rainbow (2.2.2)
       rake
     rake (12.0.0)
-    rake-tasks-docker (0.2.0)
+    rake-tasks-docker (0.2.1)
       rake (>= 10.0, <= 12)
     rake-tasks-docker-setup (0.1.0)
       deep_merge (~> 1.0)
@@ -301,7 +301,7 @@ DEPENDENCIES
   knife-solo (~> 0.6.0)
   knife-solo_data_bag (~> 1.1.0)
   railsless-deploy (~> 1.1)
-  rake-tasks-docker (~> 0.2.0)
+  rake-tasks-docker (~> 0.2.1)
   rake-tasks-docker-setup (~> 0.1.0)
   rake-tasks-docker-sync (~> 1.0.0)
   rubocop (~> 0.49.0)
