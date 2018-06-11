@@ -8,7 +8,12 @@ old_readme = 'README.md'
 new_readme = 'README.project.md.erb'
 File.delete old_readme
 FileUtils.mv new_readme, "#{old_readme}.erb"
-File.delete 'Jenkinsfile'
+
+# Overwrite seed Jenkinsfile with project Jenkinsfile
+old_jenkinsfile = 'Jenkinsfile'
+new_jenkinsfile = 'Jenkinsfile.project.erb'
+File.delete old_jenkinsfile
+FileUtils.mv new_jenkinsfile, "#{old_jenkinsfile}.erb"
 
 # MySQL local VM MySQL passwords
 password = '984C42CF342f7j6' # password still is set in the basebox
