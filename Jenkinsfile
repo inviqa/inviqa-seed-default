@@ -120,4 +120,9 @@ EOF
             }
         }
     }
+    post {
+        failure {
+            slackSend channel: '#ops-integrations', color: 'danger', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Failure after ${currentBuild.durationString} (<${env.RUN_DISPLAY_URL}|Open>)", tokenCredentialId: 'inviqa-slack-integration-token'
+        }
+    }
 }
