@@ -70,22 +70,33 @@ EOF
                 }
                 stage('Docker Compose (stable tags)') {
                     steps {
-                        sh 'docker-compose pull'
-                        sh 'hem exec bash -c \'rake docker:up\''
+                        script {
+                            env.PATH_STABLE = sh(returnStdout: true, script: 'mktemp -d -p "${WORKSPACE}" <%= config.name %>-build-stable-XXXXX').trim()
+                        }
+
+                        sh 'rm -rf "$PATH_STABLE" && rsync -aq --exclude="<%= config.name %>-build-*" "${WORKSPACE}/" "$PATH_STABLE/"'
+
+                        dir(env.PATH_STABLE) {
+                          sh 'docker-compose pull'
+                          sh 'hem exec bash -c \'rake docker:up\''
+                        }
                     }
                     post {
                         always {
-                            sh 'hem exec bash -c \'rake docker:down\''
+                            dir(env.PATH_STABLE) {
+                                sh 'hem exec bash -c \'rake docker:down\''
+                                deleteDir()
+                            }
                         }
                     }
                 }
                 stage('Docker Compose (latest tags)') {
                     steps {
                         script {
-                            env.PATH_LATEST = sh(returnStdout: true, script: 'mktemp -d -p "${WORKSPACE}" ../<%= config.name %>-test-XXXXX').trim()
+                            env.PATH_LATEST = sh(returnStdout: true, script: 'mktemp -d -p "${WORKSPACE}" <%= config.name %>-build-XXXXX').trim()
                         }
 
-                        sh 'rm -rf "$PATH_LATEST" && cp -r "${WORKSPACE}" "$PATH_LATEST"'
+                        sh 'rm -rf "$PATH_LATEST" && rsync -aq --exclude="<%= config.name %>-build-*" "${WORKSPACE}/" "$PATH_LATEST/"'
 
                         dir(env.PATH_LATEST) {
                             sh 'sed -i -e \'s/^\\(quay.io\\/continuouspipe\\/.*:\\)stable\\s*$/\\1latest/\' docker-compose.yml Dockerfile'
