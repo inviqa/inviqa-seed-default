@@ -16,6 +16,10 @@ pipeline {
         timestamps()
     }
 
+    environment {
+        COMPOSE_HTTP_TIMEOUT = 600
+    }
+
     stages {
         stage('Setup') {
             steps {
