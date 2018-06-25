@@ -66,6 +66,7 @@ EOF
                 }
                 stage('Docker Compose (stable tags)') {
                     steps {
+                        sh 'docker-compose pull'
                         sh 'hem exec bash -c \'rake docker:up\''
                     }
                     post {
@@ -84,6 +85,7 @@ EOF
 
                         dir(env.PATH_LATEST) {
                             sh 'sed -i -e \'s/^\\(quay.io\\/continuouspipe\\/.*:\\)stable\\s*$/\\1latest/\' docker-compose.yml Dockerfile'
+                            sh 'docker-compose pull'
                             sh 'hem exec bash -c \'rake docker:up\''
                         }
                     }
