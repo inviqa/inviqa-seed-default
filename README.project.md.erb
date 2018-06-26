@@ -99,19 +99,18 @@ Targets:
 
 XDebug is enabled within the container by default with the settings specified in `docker-compose.override.yml`.
 
-By default xdebug will attempt to connect to `10.254.254.254` on port `9000`. To facilitate this you can alias `127.0.0.1` to this address using the below instructions.
-
-##### DockerForMac
-
-```
-sudo ifconfig lo0 alias 10.254.254.254
-```
+By default xdebug will attempt to connect to either `host.docker.internal` which is a route back to your host
+machine from the container, or `10.254.254.254`, on port `9000`.
 
 ##### Ubuntu
+
+To facilitate this on Ubuntu, you can alias `127.0.0.1` to the `10.254.254.254` address like so:
 
 ```
 sudo ifconfig lo:1 10.254.254.254 up
 ```
+
+##### IDE
 
 You should now be able to use XDebug by setting PHPStorm to listen for connections.
 

@@ -7,3 +7,4 @@ services:
       APP_USER_LOCAL: 'true'
       APP_USER: 'build'
       APP_GROUP: 'build'
+      XDEBUG_REMOTE_HOST: '10.254.254.254'

@@ -4,5 +4,6 @@ services:
     environment:
       APP_USER: 'build'
       APP_GROUP: 'build'
+      XDEBUG_REMOTE_HOST: 'host.docker.internal'
     volumes:
       - .:/app:delegated
