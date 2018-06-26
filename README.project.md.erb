@@ -87,6 +87,20 @@ Targets:
   docker:up                  start up the docker-compose environment
 ```
 
+### Day to day running
+
+Unless you need to re-run part of the setup process again, you can get the containers to simply start up by running:
+```RUN_BUILD=false rake docker:up```
+if you are using `docker-sync`, or:
+```RUN_BUILD=false docker-compose up -d```
+otherwise.
+
+This will skip the setup of the project.
+
+To inverse the setting so it will always skip the build, edit `docker-compose.override.yml` and set `RUN_BUILD: false`
+instead of `RUN_BUILD: # get from host env`.
+
+
 ### Customising
 
 1. Change the variables that you want to in the `docker-compose.override.yml`
