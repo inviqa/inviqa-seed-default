@@ -136,6 +136,8 @@ tasks:
 
         sshforward:
           condition: 'code_reference.branch matches "#^cpdev/#"'
+          source:
+            image: quay.io/continuouspipe/ssh-forward:stable
           specification:
             ports:
               - 9000
