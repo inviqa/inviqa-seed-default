@@ -15,11 +15,5 @@
 /vendor
 /bin/composer.phar
 
-# Continuous Pipe
-/cp-remote-logs
-/.cp-remote-settings.yml
-/.cp-remote-env-settings.yml
-/.cp-remote-ignore
-
 # Frontend
 node_modules

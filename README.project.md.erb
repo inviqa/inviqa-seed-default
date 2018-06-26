@@ -103,33 +103,6 @@ Targets:
 5. In PHPStorm, click the listen for connections button in the top right
 6. In your browser, use an extension to set the right cookies to trigger Xdebug.
 
-## ContinuousPipe remote environment
-
-1. Request access from the team in #<%= config.name %> to see [the ContinuousPipe Project](https://ui.continuouspipe.io/project/<%= config.name %>/flows)
-2. Set up [CP Remote](https://docs.continuouspipe.io/remote-development/getting-started/)
-3. Go to the "<%= config.name %>" project on ContinuousPipe
-4. Set up a development environment using the "Developer Environments" tab
-5. Copy the command it gives you to your terminal (note, do not share the token it gives you with anyone!)
-6. Wait for the build to finish
-7. Answer which pod you would like to connect to by default. This will probably be "web".
-8. Run `cp-remote watch` to sync your local filesystem changes with the remote environment.
-9. In another tab, run `cp-remote bash` to log in to your remote "web" container.
-10. Develop away, ask in #<%= config.name %> or #continuous-pipe on Slack if you run into problems!
-
-The credentials for the HTTP auth that will be needed if you are on a non-whitelisted IP Address can be found in the
-Lastpass entry `<%= config.name %> on CP: HTTP Basic Auth` in the folder `Shared-<%= config.name %>-Accounts`
-
-#### XDebug Setup
-This will only work on development environments, as `sshforward` is only deployed there.
-
-1. In a `cp-remote bash` session, run the following to enable xdebug, disable tideways and increase the timeout for PHP requests to 10000 seconds:
-```
-XDEBUG_REMOTE_ENABLED="true" TIDEWAYS_ENABLED="false" PHP_MAX_EXECUTION_TIME="10000" container confd && pkill php-fpm && pkill nginx
-```
-2. On your machine in another terminal window, run `cp-remote forward -s sshforward 2222:22`
-3. On your machine in another terminal window, run `ssh -p 2222 forward@localhost -N -R 9000:localhost:9000`
-4. Configure PHPStorm or your desired IDE to listen for requests on port 9000.
-
 ## Hem VM
 
 #### Install Dependencies

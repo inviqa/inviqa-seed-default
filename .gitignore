@@ -19,10 +19,6 @@
 /vendor
 /bin/composer.phar
 
-# Continuous Pipe
-/cp-remote-logs
-/.cp-remote-settings.yml
-
 # Frontend
 .sass-cache/*
 *.css.map
