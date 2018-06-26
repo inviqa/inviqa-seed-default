@@ -26,7 +26,3 @@ services:
   mailcatcher:
     ports:
       - '1080:1080'
-
-  sshforward:
-    ports:
-      - '2222:22'
