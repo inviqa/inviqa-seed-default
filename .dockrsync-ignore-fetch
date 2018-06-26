@@ -1,3 +1,0 @@
-# "+" before the filename means it will be included for fetch and excluded for sync/watch
-+ /vendor
-+ /node_modules
