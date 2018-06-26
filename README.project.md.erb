@@ -95,13 +95,27 @@ Targets:
    - `TIDEWAYS_ENABLED` can be turned off to allow Xdebug to not pick up `tideways.php` as the entry point for the application.
 2. Stop and start your environment: `docker-compose stop; docker-compose up -d`
 
-#### XDebug Setup
-1. Set `XDEBUG_REMOTE_ENABLED` to `true` and `TIDEWAYS_ENABLED` to `false` in `docker-compose.override.yml`, after copying it from `docker-compose.override.yml.dist` if you haven't already
-2. Run `docker-compose stop web; docker-compose up -d web`
-3. Run `ssh -p 2222 forward@localhost -N -R 9000:localhost:9000` in another tab
-4. In PHPStorm, configure a web server with path mapping /app/ to the project directory.
-5. In PHPStorm, click the listen for connections button in the top right
-6. In your browser, use an extension to set the right cookies to trigger Xdebug.
+#### Xdebug setup
+
+XDebug is enabled within the container by default with the settings specified in `docker-compose.override.yml`.
+
+By default xdebug will attempt to connect to `10.254.254.254` on port `9000`. To facilitate this you can alias `127.0.0.1` to this address using the below instructions.
+
+##### DockerForMac
+
+```
+sudo ifconfig lo0 alias 10.254.254.254
+```
+
+##### Ubuntu
+
+```
+sudo ifconfig lo:1 10.254.254.254 up
+```
+
+You should now be able to use XDebug by setting PHPStorm to listen for connections.
+
+**NOTE:** The path mapping should be `/app/` to your project directory.
 
 ## ContinuousPipe remote environment
 
