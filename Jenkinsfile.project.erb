@@ -50,7 +50,8 @@ for service in data['services']:
   data['services'][service].pop('ports', None)
 print yaml.dump(data, default_flow_style = False)
 EOF
-)" < docker-compose.override.yml.dist > docker-compose.override.yml.dist'''
+)" < docker-compose.override.yml.dist > docker-compose.override.yml.no_ports.dist'''
+                sh 'mv docker-compose.override.yml.no_ports.dist docker-compose.override.yml.dist'
                 sh 'hem deps gems'
                 sh 'hem exec bash -c \'rake docker:setup\''
             }
