@@ -78,8 +78,8 @@ EOF
                         sh 'rm -rf "$PATH_STABLE" && rsync -aq --exclude="<%= config.name %>-build-*" "${WORKSPACE}/" "$PATH_STABLE/"'
 
                         dir(env.PATH_STABLE) {
-                          sh 'docker-compose pull'
-                          sh 'hem exec bash -c \'rake docker:up\''
+                            sh 'docker-compose pull'
+                            sh 'hem exec bash -c \'rake docker:up\''
                         }
                     }
                     post {
