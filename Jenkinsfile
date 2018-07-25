@@ -1,5 +1,10 @@
 String cron_string = BRANCH_NAME == 'master' ? 'H H * * *' : ''
 
+def GetWorkspace(suffix = '')
+{
+    return 'workspace/' + env.BUILD_TAG.replace('%', '-') + suffix;
+}
+
 pipeline {
     agent none
 
@@ -67,7 +72,7 @@ EOF
                     agent {
                         node {
                             label 'vmbuild'
-                            customWorkspace "workspace/${BUILD_TAG}@vm"
+                            customWorkspace GetWorkspace('@vm')
                         }
                     }
                     steps {
@@ -85,7 +90,7 @@ EOF
                     agent {
                         node {
                             label 'dockerbuild'
-                            customWorkspace "workspace/${BUILD_TAG}@stable"
+                            customWorkspace GetWorkspace('@stable')
                         }
                     }
                     steps {
@@ -103,7 +108,7 @@ EOF
                     agent {
                         node {
                             label 'dockerbuild'
-                            customWorkspace "workspace/${BUILD_TAG}@latest"
+                            customWorkspace GetWorkspace('@latest')
                         }
                     }
                     steps {
