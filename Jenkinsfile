@@ -1,9 +1,7 @@
 String cron_string = BRANCH_NAME == 'master' ? 'H H * * *' : ''
 
 pipeline {
-    agent {
-        label 'vmbuild'
-    }
+    agent none
 
     triggers {
         cron cron_string
@@ -14,10 +12,14 @@ pipeline {
         disableConcurrentBuilds()
         timeout(time: 1, unit: 'HOURS')
         timestamps()
+        skipDefaultCheckout()
     }
 
     stages {
         stage('Plant seed') {
+            agent {
+                label 'vmbuild || dockerbuild'
+            }
             steps {
                 checkout scm
 
@@ -47,10 +49,12 @@ for service in data['services']:
 print yaml.dump(data, default_flow_style = False)
 EOF
 )" < docker-compose.override.yml.dist > docker-compose.override.yml'''
+
+                    stash name: 'planted', useDefaultExcludes: false
                 }
             }
             post {
-                failure {
+                always {
                     dir(env.PLANTED_PATH) {
                         deleteDir()
                     }
@@ -60,61 +64,58 @@ EOF
         stage('Provision dev environments') {
             parallel {
                 stage('Vagrant') {
-                    steps {
-                        dir(env.PLANTED_PATH) {
-                            sh 'eval "$(ssh-agent)" && ssh-add && hem vm rebuild'
-                            sh 'hem exec bash -c \'cd tools/vagrant && rake\''
+                    agent {
+                        node {
+                            label 'vmbuild'
+                            customWorkspace "workspace/${BUILD_TAG}@vm"
                         }
+                    }
+                    steps {
+                        unstash 'planted'
+                        sh 'eval "$(ssh-agent)" && ssh-add && hem vm rebuild'
+                        sh 'hem exec bash -c \'cd tools/vagrant && rake\''
                     }
                     post {
                         always {
-                            dir(env.PLANTED_PATH) {
-                                sh 'hem vm destroy'
-                            }
+                            sh 'hem vm destroy'
                         }
                     }
                 }
                 stage('Docker Compose (stable tags)') {
-                    steps {
-                        dir(env.PLANTED_PATH) {
-                            sh 'hem exec bash -c \'rake docker:up\''
+                    agent {
+                        node {
+                            label 'dockerbuild'
+                            customWorkspace "workspace/${BUILD_TAG}@stable"
                         }
+                    }
+                    steps {
+                        unstash 'planted'
+                        sh 'hem deps gems'
+                        sh 'hem exec bash -c \'rake docker:up\''
                     }
                     post {
                         always {
-                            dir(env.PLANTED_PATH) {
-                                sh 'hem exec bash -c \'rake docker:down\''
-                            }
+                            sh 'hem exec bash -c \'rake docker:down\''
                         }
                     }
                 }
                 stage('Docker Compose (latest tags)') {
+                    agent {
+                        node {
+                            label 'dockerbuild'
+                            customWorkspace "workspace/${BUILD_TAG}@latest"
+                        }
+                    }
                     steps {
-                        script {
-                            env.PLANTED_PATH_LATEST = sh(returnStdout: true, script: 'mktemp -d -p "${WORKSPACE}" seed-test-XXXXX').trim()
-                        }
-
-                        sh 'rm -rf "$PLANTED_PATH_LATEST" && cp -r "$PLANTED_PATH" "$PLANTED_PATH_LATEST"'
-
-                        dir(env.PLANTED_PATH_LATEST) {
-                            sh 'sed -i -E "s#(quay.io/continuouspipe/[^:]*:)stable(\\s*)#\\1latest\\2#g" Dockerfile docker-compose.yml'
-                            sh 'hem exec bash -c \'rake docker:up\''
-                        }
+                        unstash 'planted'
+                        sh 'sed -i -E "s#(quay.io/continuouspipe/[^:]*:)stable(\\s*)#\\1latest\\2#g" Dockerfile docker-compose.yml'
+                        sh 'hem deps gems'
+                        sh 'hem exec bash -c \'rake docker:up\''
                     }
                     post {
                         always {
-                            dir(env.PLANTED_PATH_LATEST) {
-                                sh 'hem exec bash -c \'rake docker:down\''
-                                deleteDir()
-                            }
+                            sh 'hem exec bash -c \'rake docker:down\''
                         }
-                    }
-                }
-            }
-            post {
-                always {
-                    dir(env.PLANTED_PATH) {
-                        deleteDir()
                     }
                 }
             }
