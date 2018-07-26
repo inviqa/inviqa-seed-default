@@ -1,9 +1,12 @@
 String cron_string = BRANCH_NAME == 'master' ? 'H H * * *' : ''
 
+def GetWorkspace(suffix = '')
+{
+    return 'workspace/' + env.BUILD_TAG.replace('%', '-') + suffix;
+}
+
 pipeline {
-    agent {
-        label 'vmbuild'
-    }
+    agent none
 
     triggers {
         cron cron_string
@@ -14,6 +17,7 @@ pipeline {
         disableConcurrentBuilds()
         timeout(time: 1, unit: 'HOURS')
         timestamps()
+        skipDefaultCheckout()
     }
 
     environment {
@@ -22,6 +26,9 @@ pipeline {
 
     stages {
         stage('Setup') {
+            agent {
+                label 'vmbuild || dockerbuild'
+            }
             steps {
                 checkout scm
 
@@ -54,12 +61,21 @@ EOF
                 sh 'mv docker-compose.override.yml.no_ports.dist docker-compose.override.yml.dist'
                 sh 'hem deps gems'
                 sh 'hem exec bash -c \'rake docker:setup\''
+                stash name: 'set_up', useDefaultExcludes: false
             }
         }
         stage('Provision dev environments') {
             parallel {
                 stage('Vagrant') {
+                    agent {
+                        node {
+                            label 'vmbuild'
+                            customWorkspace GetWorkspace('@vm')
+                        }
+                    }
                     steps {
+                        deleteDir()
+                        unstash 'set_up'
                         sh 'eval "$(ssh-agent)" && ssh-add && hem vm rebuild'
                         sh 'hem exec bash -c \'cd tools/vagrant && rake\''
                     }
@@ -70,47 +86,41 @@ EOF
                     }
                 }
                 stage('Docker Compose (stable tags)') {
+                    agent {
+                        node {
+                            label 'dockerbuild'
+                            customWorkspace GetWorkspace('@stable')
+                        }
+                    }
                     steps {
-                        script {
-                            env.PATH_STABLE = sh(returnStdout: true, script: 'mktemp -d -p "${WORKSPACE}" <%= config.name %>-build-stable-XXXXX').trim()
-                        }
-
-                        sh 'rm -rf "$PATH_STABLE" && rsync -aq --exclude="<%= config.name %>-build-*" "${WORKSPACE}/" "$PATH_STABLE/"'
-
-                        dir(env.PATH_STABLE) {
-                            sh 'docker-compose pull'
-                            sh 'hem exec bash -c \'rake docker:up\''
-                        }
+                        deleteDir()
+                        unstash 'set_up'
+                        sh 'docker-compose pull'
+                        sh 'hem exec bash -c \'rake docker:up\''
                     }
                     post {
                         always {
-                            dir(env.PATH_STABLE) {
-                                sh 'hem exec bash -c \'rake docker:down\''
-                                deleteDir()
-                            }
+                            sh 'hem exec bash -c \'rake docker:down\''
                         }
                     }
                 }
                 stage('Docker Compose (latest tags)') {
+                    agent {
+                        node {
+                            label 'dockerbuild'
+                            customWorkspace GetWorkspace('@latest')
+                        }
+                    }
                     steps {
-                        script {
-                            env.PATH_LATEST = sh(returnStdout: true, script: 'mktemp -d -p "${WORKSPACE}" <%= config.name %>-build-XXXXX').trim()
-                        }
-
-                        sh 'rm -rf "$PATH_LATEST" && rsync -aq --exclude="<%= config.name %>-build-*" "${WORKSPACE}/" "$PATH_LATEST/"'
-
-                        dir(env.PATH_LATEST) {
-                            sh 'sed -i -e \'s/^\\(quay.io\\/continuouspipe\\/.*:\\)stable\\s*$/\\1latest/\' docker-compose.yml Dockerfile'
-                            sh 'docker-compose pull'
-                            sh 'hem exec bash -c \'rake docker:up\''
-                        }
+                        deleteDir()
+                        unstash 'set_up'
+                        sh 'sed -i -e \'s/^\\(quay.io\\/continuouspipe\\/.*:\\)stable\\s*$/\\1latest/\' docker-compose.yml Dockerfile'
+                        sh 'docker-compose pull'
+                        sh 'hem exec bash -c \'rake docker:up\''
                     }
                     post {
                         always {
-                            dir(env.PATH_LATEST) {
-                                sh 'hem exec bash -c \'rake docker:down\''
-                                deleteDir()
-                            }
+                            sh 'hem exec bash -c \'rake docker:down\''
                         }
                     }
                 }
