@@ -76,6 +76,7 @@ EOF
                         }
                     }
                     steps {
+                        deleteDir()
                         unstash 'planted'
                         sh 'eval "$(ssh-agent)" && ssh-add && hem vm rebuild'
                         sh 'hem exec bash -c \'cd tools/vagrant && rake\''
@@ -94,6 +95,7 @@ EOF
                         }
                     }
                     steps {
+                        deleteDir()
                         unstash 'planted'
                         sh 'hem deps gems'
                         sh 'hem exec bash -c \'rake docker:up\''
@@ -112,6 +114,7 @@ EOF
                         }
                     }
                     steps {
+                        deleteDir()
                         unstash 'planted'
                         sh 'sed -i -E "s#(quay.io/continuouspipe/[^:]*:)stable(\\s*)#\\1latest\\2#g" Dockerfile docker-compose.yml'
                         sh 'hem deps gems'
