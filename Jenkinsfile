@@ -12,6 +12,10 @@ pipeline {
         cron cron_string
     }
 
+    environment {
+        COMPOSE_HTTP_TIMEOUT = 600
+    }
+
     options {
         buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
         disableConcurrentBuilds()
@@ -97,7 +101,7 @@ EOF
                     steps {
                         deleteDir()
                         unstash 'planted'
-                        sh 'hem deps gems'
+                        sh 'docker-compose pull'
                         sh 'hem exec bash -c \'rake docker:up\''
                     }
                     post {
@@ -117,7 +121,7 @@ EOF
                         deleteDir()
                         unstash 'planted'
                         sh 'sed -i -E "s#(quay.io/continuouspipe/[^:]*:)stable(\\s*)#\\1latest\\2#g" Dockerfile docker-compose.yml'
-                        sh 'hem deps gems'
+                        sh 'docker-compose pull'
                         sh 'hem exec bash -c \'rake docker:up\''
                     }
                     post {
