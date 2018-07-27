@@ -1,4 +1,5 @@
-String cron_string = BRANCH_NAME == 'master' ? 'H H * * *' : ''
+String main_branch = 'master'
+String cron_string = BRANCH_NAME == main_branch ? 'H H * * *' : ''
 
 def GetWorkspace(suffix = '')
 {
@@ -65,6 +66,8 @@ EOF
             }
         }
         stage('Provision dev environments') {
+            when { branch main_branch }
+
             parallel {
                 stage('Vagrant') {
                     agent {
