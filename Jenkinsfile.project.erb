@@ -61,7 +61,7 @@ EOF
                 sh 'mv docker-compose.override.yml.no_ports.dist docker-compose.override.yml.dist'
                 sh 'hem deps gems'
                 sh 'hem exec bash -c \'rake docker:setup\''
-                stash name: 'set_up', includes: 'docker.env,docker-compose.override.yml.dist,.bundle', useDefaultExcludes: false
+                stash name: 'set_up', includes: 'docker.env,docker-compose.override.yml.dist,.bundle/**,.gems/**', useDefaultExcludes: false
             }
         }
         stage('Provision dev environments') {
