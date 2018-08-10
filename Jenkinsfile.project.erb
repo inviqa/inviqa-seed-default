@@ -113,7 +113,7 @@ EOF
                     }
                     steps {
                         unstash 'set_up'
-                        sh 'sed -i -e \'s/^\\(quay.io\\/continuouspipe\\/.*:\\)stable\\s*$/\\1latest/\' docker-compose.yml Dockerfile'
+                        sh 'sed -i -E "s#(quay.io/continuouspipe/.*:)stable\s*#\1latest#g" Dockerfile docker-compose.yml'
                         sh 'docker-compose pull'
                         sh 'hem exec bash -c \'rake docker:up\''
                     }
