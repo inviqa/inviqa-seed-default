@@ -97,7 +97,7 @@ EOF
                         sh 'rm -rf "$PLANTED_PATH_LATEST" && cp -r "$PLANTED_PATH" "$PLANTED_PATH_LATEST"'
 
                         dir(env.PLANTED_PATH_LATEST) {
-                            sh 'sed -i -e \'s/^\\(quay.io\\/continuouspipe\\/.*:\\)stable\\s*$/\\1latest/\' docker-compose.yml Dockerfile'
+                            sh 'sed -i -E "s#(quay.io/continuouspipe/[^:]*:)stable(\\s*)#\\1latest\\2#g" Dockerfile docker-compose.yml'
                             sh 'hem exec bash -c \'rake docker:up\''
                         }
                     }
